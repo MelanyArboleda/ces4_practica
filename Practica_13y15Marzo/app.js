@@ -13,11 +13,9 @@ function send404(response) {
 var mimeLookup = {
     '.js': 'application/javascript',
     '.html': 'text/html'
-    //'.css': 'text/css'
 };
 
 var server = http.createServer(function (req, res) {
-    console.log(req.url, req.method)
     if (req.method == 'GET') {
         var fileurl = '/Errores.html';
         if (req.url == '/')
@@ -25,7 +23,15 @@ var server = http.createServer(function (req, res) {
         else
             fileurl = req.url;
         var filepath = path.resolve('./' + fileurl);
-        console.log(filepath);
+        var q = url.parse(req.url, true).query;
+        if(q.status){
+            var txt = q.status + " dsag " + q.message;
+            res.write(`<h1> Status : ${q.status} </h1>`);
+            res.write(`<span> Message : ${q.message} </span> <br>`);
+            res.write(`<h3><a href="/" > Back </a></h3>`);
+            res.end();
+            return;
+        }
         var fileExt = path.extname(filepath);
         var mimeType = mimeLookup[fileExt];
         if (!mimeType) {
@@ -39,11 +45,7 @@ var server = http.createServer(function (req, res) {
             };
             res.writeHead(200, { 'content-type': mimeType });
             fs.createReadStream(filepath).pipe(res);
-            if(url){
-              var q = url.parse(req.url, true).query;
-              var txt = q.status + " dsag " + q.message;
-              console.log(q);
-            }    
+            
         });
     } else {
         send404(res);

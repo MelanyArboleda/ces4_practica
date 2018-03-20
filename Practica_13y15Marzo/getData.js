@@ -20,16 +20,15 @@ function dataErrors(sitio) {
               ta = createNode('td'),
               tb = createNode('td'),
               tbot = createNode('td'),
-              bot = createNode('button');
+              a = createNode('a');
             ta.innerHTML = `${errors.Status}`;
             tb.innerHTML = `${errors.Message}`;
-            //a.innerHTML = 'Show';
-            bot.innerText = 'Show';
-            bot.addEventListener('click',() => show(errors));
+            a.innerHTML = 'Show';
+            a.href= `http://localhost:3030/?status=${errors.Status}&message=${errors.Message}`;
             append(tr, ta);
             append(tr, tb);
             append(tr, tbot);
-            append(tbot, bot);
+            append(tbot, a);
             append(tab, tr);
         })
       })
@@ -44,11 +43,6 @@ function createNode(element) {
   
 function append(parent, el) {
     return parent.appendChild(el);
-}
-function show(errors){
-  errors.innerHTML = '';
-  window.open(`http://localhost:3030/stsx?status=${errors.Status}&message=${errors.Message}`, '_blank');
-    alert(`${errors.Status}`);
 }
 
 loadData();
